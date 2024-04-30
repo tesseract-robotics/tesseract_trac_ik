@@ -31,6 +31,7 @@ TESSERACT_COMMON_IGNORE_WARNINGS_POP
 #include <tesseract_trac_ik/trac-ik/trac-ik_inv_kin_chain.h>
 #include <tesseract_kinematics/core/utils.h>
 #include <tesseract_kinematics/kdl/kdl_utils.h>
+#include <tesseract_scene_graph/graph.h>
 
 namespace tesseract_kinematics
 {

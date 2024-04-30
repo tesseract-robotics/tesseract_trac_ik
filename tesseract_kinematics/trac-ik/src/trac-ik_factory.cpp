@@ -29,11 +29,12 @@
 
 namespace tesseract_kinematics
 {
-InverseKinematics::UPtr TracIKInvKinChainFactory::create(const std::string& solver_name,
-                                                         const tesseract_scene_graph::SceneGraph& scene_graph,
-                                                         const tesseract_scene_graph::SceneState& /*scene_state*/,
-                                                         const KinematicsPluginFactory& /*plugin_factory*/,
-                                                         const YAML::Node& config) const
+std::unique_ptr<InverseKinematics>
+TracIKInvKinChainFactory::create(const std::string& solver_name,
+                                 const tesseract_scene_graph::SceneGraph& scene_graph,
+                                 const tesseract_scene_graph::SceneState& /*scene_state*/,
+                                 const KinematicsPluginFactory& /*plugin_factory*/,
+                                 const YAML::Node& config) const
 {
   std::string base_link;
   std::string tip_link;
@@ -94,7 +95,8 @@ InverseKinematics::UPtr TracIKInvKinChainFactory::create(const std::string& solv
     return nullptr;
   }
 
-  return std::make_unique<TracIKInvKinChain>(scene_graph, base_link, tip_link, solver_name, max_time, epsilon, solve_type);
+  return std::make_unique<TracIKInvKinChain>(
+      scene_graph, base_link, tip_link, solver_name, max_time, epsilon, solve_type);
 }
 
 TESSERACT_PLUGIN_ANCHOR_IMPL(TracIKFactoryAnchor)
