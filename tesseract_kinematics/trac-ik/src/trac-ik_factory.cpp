@@ -44,27 +44,27 @@ TracIKInvKinChainFactory::create(const std::string& solver_name,
 
   try
   {
-    if (YAML::Node n = config["base_link"])
+    if (const YAML::Node& n = config["base_link"])
       base_link = n.as<std::string>();
     else
       throw std::runtime_error("TracIKInvKinChainFactory, missing 'base_link' entry");
 
-    if (YAML::Node n = config["tip_link"])
+    if (const YAML::Node& n = config["tip_link"])
       tip_link = n.as<std::string>();
     else
       throw std::runtime_error("TracIKInvKinChainFactory, missing 'tip_link' entry");
 
-    if (YAML::Node opw_params = config["params"])
+    if (const YAML::Node& params = config["params"])
     {
-      if (YAML::Node n = opw_params["max_time"])
+      if (const YAML::Node& n = params["max_time"])
       {
         max_time = n.as<double>();
       }
-      if (YAML::Node n = opw_params["epsilon"])
+      if (const YAML::Node& n = params["epsilon"])
       {
         epsilon = n.as<double>();
       }
-      if (YAML::Node n = opw_params["solve_type"])
+      if (const YAML::Node& n = params["solve_type"])
       {
         if (n.as<std::string>() == "Speed")
         {
