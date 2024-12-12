@@ -9,23 +9,21 @@ find_package(tesseract_kinematics REQUIRED)
 # And add this to package.xml
 # <depend>trac_ik_lib</depend>
 
-add_library(
-  ${PROJECT_NAME}_trac-ik
-  src/trac-ik_inv_kin_chain.cpp)
+add_library(${PROJECT_NAME}_trac-ik src/trac-ik_inv_kin_chain.cpp)
 target_link_libraries(
   ${PROJECT_NAME}_trac-ik
-  # When integrating into tesseract_kinematics restore lines below and remove tesseract_kinematics_core and tesseract_kinematics_kdl
-  # PUBLIC ${PROJECT_NAME}_core ${PROJECT_NAME}_kdl
+  # When integrating into tesseract_kinematics restore lines below and remove tesseract_kinematics_core and
+  # tesseract_kinematics_kdl PUBLIC ${PROJECT_NAME}_core ${PROJECT_NAME}_kdl
   PUBLIC tesseract::tesseract_kinematics_core
          tesseract::tesseract_kinematics_kdl
          Eigen3::Eigen
          tesseract::tesseract_common
          tesseract::tesseract_scene_graph
-         trac_ik_lib::trac_ik_lib
+         trac_ik_lib::trac_ik
          console_bridge::console_bridge)
-target_compile_options(${PROJECT_NAME}_trac-ik  PRIVATE ${TESSERACT_COMPILE_OPTIONS_PRIVATE})
-target_compile_options(${PROJECT_NAME}_trac-ik  PUBLIC ${TESSERACT_COMPILE_OPTIONS_PUBLIC})
-target_compile_definitions(${PROJECT_NAME}_trac-ik  PUBLIC ${TESSERACT_COMPILE_DEFINITIONS})
+target_compile_options(${PROJECT_NAME}_trac-ik PRIVATE ${TESSERACT_COMPILE_OPTIONS_PRIVATE})
+target_compile_options(${PROJECT_NAME}_trac-ik PUBLIC ${TESSERACT_COMPILE_OPTIONS_PUBLIC})
+target_compile_definitions(${PROJECT_NAME}_trac-ik PUBLIC ${TESSERACT_COMPILE_DEFINITIONS})
 target_clang_tidy(${PROJECT_NAME}_trac-ik ENABLE ${TESSERACT_ENABLE_CLANG_TIDY})
 target_cxx_version(${PROJECT_NAME}_trac-ik PUBLIC VERSION ${TESSERACT_CXX_VERSION})
 target_code_coverage(
@@ -34,14 +32,14 @@ target_code_coverage(
   ALL
   EXCLUDE ${COVERAGE_EXCLUDE}
   ENABLE ${TESSERACT_ENABLE_CODE_COVERAGE})
-target_include_directories( ${PROJECT_NAME}_trac-ik PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-                                                           "$<INSTALL_INTERFACE:include>")
+target_include_directories(${PROJECT_NAME}_trac-ik PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+                                                          "$<INSTALL_INTERFACE:include>")
 
 # Add trac-ik kinematics factory
 add_library(${PROJECT_NAME}_trac-ik_factory src/trac-ik_factory.cpp)
 target_link_libraries(
   ${PROJECT_NAME}_trac-ik_factory
-  PUBLIC ${PROJECT_NAME}_trac-ik 
+  PUBLIC ${PROJECT_NAME}_trac-ik
          tesseract::tesseract_scene_graph
          tesseract::tesseract_common
          console_bridge::console_bridge)
@@ -56,8 +54,9 @@ target_code_coverage(
   ALL
   EXCLUDE ${COVERAGE_EXCLUDE}
   ENABLE ${TESSERACT_ENABLE_CODE_COVERAGE})
-target_include_directories(${PROJECT_NAME}_trac-ik_factory PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-                                                                  "$<INSTALL_INTERFACE:include>")
+target_include_directories(
+  ${PROJECT_NAME}_trac-ik_factory PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+                                         "$<INSTALL_INTERFACE:include>")
 
 # Add factory library so kinematic_factory can find this factory by default
 set(KINEMATICS_PLUGINS ${KINEMATICS_PLUGINS} "${PROJECT_NAME}_trac-ik_factory" PARENT_SCOPE)
