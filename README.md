@@ -1,6 +1,8 @@
 # Tesseract Trac-IK plugin
 
-This is a [Trac-IK](https://traclabs.com/projects/trac-ik/) plugin for `tesseract_kinematics`. It is not included in the main `tesseract` repository, as it depends on a [ROS 2 fork of trac_ik_lib](https://github.com/aprotyas/trac_ik), which is ROS-dependent.
+This is a [Trac-IK](https://traclabs.com/projects/trac-ik/) plugin for `tesseract_kinematics`. It is not included in the main Tesseract repository, as it depends on a [fork of trac_ik_lib](https://bitbucket.org/rjoomen/trac_ik/src/no_node/), which is ROS-dependent.
+
+This fork is up to date with the `trac_ik` upsteam repo, but adds a constructor that doesn't require a ROS node as argument, as Tesseract cannot provide that.
 
 ## Usage
 
