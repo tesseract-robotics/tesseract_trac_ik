@@ -14,7 +14,8 @@ target_link_libraries(
   ${PROJECT_NAME}_trac-ik
   # When integrating into tesseract_kinematics restore lines below and remove tesseract_kinematics_core and
   # tesseract_kinematics_kdl PUBLIC ${PROJECT_NAME}_core ${PROJECT_NAME}_kdl
-  PUBLIC tesseract::tesseract_kinematics_core
+  PUBLIC boost_plugin_loader::boost_plugin_loader
+         tesseract::tesseract_kinematics_core
          tesseract::tesseract_kinematics_kdl
          Eigen3::Eigen
          tesseract::tesseract_common
