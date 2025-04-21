@@ -41,7 +41,7 @@ class TracIKInvKinChainFactory : public InvKinFactory
                                             const YAML::Node& config) const override final;
 };
 
-TESSERACT_PLUGIN_ANCHOR_DECL(TracIKFactoryAnchor)
+PLUGIN_ANCHOR_DECL(TracIKFactoryAnchor)
 
 }  // namespace tesseract_kinematics
 

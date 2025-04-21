@@ -99,7 +99,7 @@ TracIKInvKinChainFactory::create(const std::string& solver_name,
       scene_graph, base_link, tip_link, solver_name, max_time, epsilon, solve_type);
 }
 
-TESSERACT_PLUGIN_ANCHOR_IMPL(TracIKFactoryAnchor)
+PLUGIN_ANCHOR_IMPL(TracIKFactoryAnchor)
 
 }  // namespace tesseract_kinematics
 
