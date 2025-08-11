@@ -93,8 +93,9 @@ public:
                     double max_time = MAX_TIME,
                     double epsilon = EPSILON,
                     TRAC_IK::SolveType solve_type = SOLVE_TYPE);
-  IKSolutions calcInvKin(const tesseract_common::TransformMap& tip_link_poses,
-                         const Eigen::Ref<const Eigen::VectorXd>& seed) const override final;
+  void calcInvKin(IKSolutions& solutions,
+                  const tesseract_common::TransformMap& tip_link_poses,
+                  const Eigen::Ref<const Eigen::VectorXd>& seed) const override final;
 
   std::vector<std::string> getJointNames() const override final;
   Eigen::Index numJoints() const override final;
@@ -116,9 +117,10 @@ private:
   // https://github.com/orocos/orocos_kinematics_dynamics/pull/399
 
   /** @brief calcFwdKin helper function */
-  IKSolutions calcInvKinHelper(const Eigen::Isometry3d& pose,
-                               const Eigen::Ref<const Eigen::VectorXd>& seed,
-                               int segment_num = -1) const;
+  void calcInvKinHelper(IKSolutions& solutions,
+                        const Eigen::Isometry3d& pose,
+                        const Eigen::Ref<const Eigen::VectorXd>& seed,
+                        int segment_num = -1) const;
 };
 
 }  // namespace tesseract_kinematics
