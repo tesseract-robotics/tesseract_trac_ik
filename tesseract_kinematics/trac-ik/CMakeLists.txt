@@ -1,6 +1,6 @@
 find_package(trac_ik_lib REQUIRED)
 # When integrating into tesseract_kinematics remove next line
-find_package(tesseract_kinematics REQUIRED)
+find_package(tesseract REQUIRED COMPONENTS kinematics kinematics_kdl)
 
 # When integrating into tesseract_kinematics add this to tesseract_kinematics-config.cmake.in
 # if(@TESSERACT_BUILD_TRACIK@)
@@ -15,11 +15,11 @@ target_link_libraries(
   # When integrating into tesseract_kinematics restore lines below and remove tesseract_kinematics_core and
   # tesseract_kinematics_kdl PUBLIC ${PROJECT_NAME}_core ${PROJECT_NAME}_kdl
   PUBLIC boost_plugin_loader::boost_plugin_loader
-         tesseract::tesseract_kinematics_core
-         tesseract::tesseract_kinematics_kdl
+         tesseract::kinematics
+         tesseract::kinematics_kdl
          Eigen3::Eigen
-         tesseract::tesseract_common
-         tesseract::tesseract_scene_graph
+         tesseract::common
+         tesseract::scene_graph
          trac_ik_lib::trac_ik
          console_bridge::console_bridge)
 target_compile_options(${PROJECT_NAME}_trac-ik PRIVATE ${TESSERACT_COMPILE_OPTIONS_PRIVATE})
@@ -41,8 +41,8 @@ add_library(${PROJECT_NAME}_trac-ik_factory src/trac-ik_factory.cpp)
 target_link_libraries(
   ${PROJECT_NAME}_trac-ik_factory
   PUBLIC ${PROJECT_NAME}_trac-ik
-         tesseract::tesseract_scene_graph
-         tesseract::tesseract_common
+         tesseract::scene_graph
+         tesseract::common
          console_bridge::console_bridge)
 target_compile_options(${PROJECT_NAME}_trac-ik_factory PRIVATE ${TESSERACT_COMPILE_OPTIONS_PRIVATE})
 target_compile_options(${PROJECT_NAME}_trac-ik_factory PUBLIC ${TESSERACT_COMPILE_OPTIONS_PUBLIC})
