@@ -27,12 +27,12 @@
 #include <tesseract_trac_ik/trac-ik/trac-ik_factory.h>
 #include <tesseract_trac_ik/trac-ik/trac-ik_inv_kin_chain.h>
 
-namespace tesseract_kinematics
+namespace tesseract::kinematics
 {
 std::unique_ptr<InverseKinematics>
 TracIKInvKinChainFactory::create(const std::string& solver_name,
-                                 const tesseract_scene_graph::SceneGraph& scene_graph,
-                                 const tesseract_scene_graph::SceneState& /*scene_state*/,
+                                 const tesseract::scene_graph::SceneGraph& scene_graph,
+                                 const tesseract::scene_graph::SceneState& /*scene_state*/,
                                  const KinematicsPluginFactory& /*plugin_factory*/,
                                  const YAML::Node& config) const
 {
@@ -101,7 +101,7 @@ TracIKInvKinChainFactory::create(const std::string& solver_name,
 
 PLUGIN_ANCHOR_IMPL(TracIKFactoryAnchor)
 
-}  // namespace tesseract_kinematics
+}  // namespace tesseract::kinematics
 
 // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
-TESSERACT_ADD_INV_KIN_PLUGIN(tesseract_kinematics::TracIKInvKinChainFactory, TracIKInvKinChainFactory);
+TESSERACT_ADD_INV_KIN_PLUGIN(tesseract::kinematics::TracIKInvKinChainFactory, TracIKInvKinChainFactory);

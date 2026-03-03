@@ -25,18 +25,18 @@
  */
 #ifndef TESSERACT_KINEMATICS_TRACIK_INV_KIN_CHAIN_H
 #define TESSERACT_KINEMATICS_TRACIK_INV_KIN_CHAIN_H
-#include <tesseract_common/macros.h>
+#include <tesseract/common/macros.h>
 TESSERACT_COMMON_IGNORE_WARNINGS_PUSH
 #include <console_bridge/console.h>
 #include <mutex>
 #include <trac_ik/trac_ik.hpp>
 TESSERACT_COMMON_IGNORE_WARNINGS_POP
 
-#include <tesseract_kinematics/core/inverse_kinematics.h>
-#include <tesseract_kinematics/core/types.h>
-#include <tesseract_kinematics/kdl/kdl_utils.h>
+#include <tesseract/kinematics/inverse_kinematics.h>
+#include <tesseract/kinematics/types.h>
+#include <tesseract/kinematics/kdl/kdl_utils.h>
 
-namespace tesseract_kinematics
+namespace tesseract::kinematics
 {
 static const std::string TRACIK_INV_KIN_CHAIN_SOLVER_NAME = "TracIKInvKinChain";
 static const double MAX_TIME = 0.005;
@@ -72,7 +72,7 @@ public:
    * @param tip_link The name of the tip link for the kinematic chain
    * @param solver_name The name of the kinematic chain
    */
-  TracIKInvKinChain(const tesseract_scene_graph::SceneGraph& scene_graph,
+  TracIKInvKinChain(const tesseract::scene_graph::SceneGraph& scene_graph,
                     const std::string& base_link,
                     const std::string& tip_link,
                     std::string solver_name = TRACIK_INV_KIN_CHAIN_SOLVER_NAME,
@@ -87,14 +87,15 @@ public:
    * @param chains A vector of kinematics chains <base_link, tip_link> that get concatenated
    * @param solver_name The solver name of the kinematic chain
    */
-  TracIKInvKinChain(const tesseract_scene_graph::SceneGraph& scene_graph,
+  TracIKInvKinChain(const tesseract::scene_graph::SceneGraph& scene_graph,
                     const std::vector<std::pair<std::string, std::string> >& chains,
                     std::string solver_name = TRACIK_INV_KIN_CHAIN_SOLVER_NAME,
                     double max_time = MAX_TIME,
                     double epsilon = EPSILON,
                     TRAC_IK::SolveType solve_type = SOLVE_TYPE);
+
   void calcInvKin(IKSolutions& solutions,
-                  const tesseract_common::TransformMap& tip_link_poses,
+                  const tesseract::common::TransformMap& tip_link_poses,
                   const Eigen::Ref<const Eigen::VectorXd>& seed) const override final;
 
   std::vector<std::string> getJointNames() const override final;
@@ -123,5 +124,5 @@ private:
                         int segment_num = -1) const;
 };
 
-}  // namespace tesseract_kinematics
+}  // namespace tesseract::kinematics
 #endif  // TESSERACT_KINEMATICS_TRACIK_INV_KIN_CHAIN_H

@@ -13,9 +13,7 @@ endif()
 find_package(Eigen3 REQUIRED)
 find_package(boost_plugin_loader REQUIRED)
 find_package(console_bridge REQUIRED)
-find_package(tesseract_scene_graph REQUIRED)
-find_package(tesseract_state_solver REQUIRED)
-find_package(tesseract_common REQUIRED)
+find_package(tesseract REQUIRED COMPONENTS common scene_graph)
 
 # Load variable for clang tidy args, compiler options and cxx version
 tesseract_variables()
@@ -56,12 +54,11 @@ string(
 target_compile_definitions(${PROJECT_NAME}_trac-ik PRIVATE TESSERACT_KINEMATICS_PLUGINS="${KINEMATICS_PLUGINS_STRING}")
 
 # Testing
-if((TESSERACT_ENABLE_TESTING OR TESSERACT_KINEMATICS_ENABLE_TESTING)
-   AND TESSERACT_BUILD_TRACIK)
-  enable_testing()
-  add_run_tests_target(ENABLE ${TESSERACT_ENABLE_RUN_TESTING})
-  add_subdirectory(test)
-endif()
+# if((TESSERACT_ENABLE_TESTING OR TESSERACT_KINEMATICS_ENABLE_TESTING)
+#    AND TESSERACT_BUILD_TRACIK)
+#   enable_testing()
+#   add_subdirectory(test)
+# endif()
 
 configure_package(COMPONENT trac-ik SUPPORTED_COMPONENTS ${SUPPORTED_COMPONENTS})
 

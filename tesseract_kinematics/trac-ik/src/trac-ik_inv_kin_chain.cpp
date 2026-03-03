@@ -23,22 +23,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <tesseract_common/macros.h>
+#include <tesseract/common/macros.h>
 TESSERACT_COMMON_IGNORE_WARNINGS_PUSH
 #include <memory>
 TESSERACT_COMMON_IGNORE_WARNINGS_POP
 
 #include <tesseract_trac_ik/trac-ik/trac-ik_inv_kin_chain.h>
-#include <tesseract_kinematics/core/utils.h>
-#include <tesseract_kinematics/kdl/kdl_utils.h>
-#include <tesseract_scene_graph/graph.h>
+#include <tesseract/kinematics/utils.h>
+#include <tesseract/kinematics/kdl/kdl_utils.h>
+#include <tesseract/scene_graph/graph.h>
 
-namespace tesseract_kinematics
+namespace tesseract::kinematics
 {
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
 
-TracIKInvKinChain::TracIKInvKinChain(const tesseract_scene_graph::SceneGraph& scene_graph,
+TracIKInvKinChain::TracIKInvKinChain(const tesseract::scene_graph::SceneGraph& scene_graph,
                                      const std::vector<std::pair<std::string, std::string>>& chains,
                                      std::string solver_name,
                                      double max_time,
@@ -57,7 +57,7 @@ TracIKInvKinChain::TracIKInvKinChain(const tesseract_scene_graph::SceneGraph& sc
       kdl_data_.robot_chain, kdl_data_.q_min, kdl_data_.q_max, max_time_, epsilon_, solve_type_);
 }
 
-TracIKInvKinChain::TracIKInvKinChain(const tesseract_scene_graph::SceneGraph& scene_graph,
+TracIKInvKinChain::TracIKInvKinChain(const tesseract::scene_graph::SceneGraph& scene_graph,
                                      const std::string& base_link,
                                      const std::string& tip_link,
                                      std::string solver_name,
@@ -127,7 +127,7 @@ void TracIKInvKinChain::calcInvKinHelper(IKSolutions& solutions,
 }
 
 void TracIKInvKinChain::calcInvKin(IKSolutions& solutions,
-                                   const tesseract_common::TransformMap& tip_link_poses,
+                                   const tesseract::common::TransformMap& tip_link_poses,
                                    const Eigen::Ref<const Eigen::VectorXd>& seed) const
 {
   assert(tip_link_poses.find(kdl_data_.tip_link_name) != tip_link_poses.end());
@@ -146,4 +146,4 @@ std::vector<std::string> TracIKInvKinChain::getTipLinkNames() const { return { k
 
 std::string TracIKInvKinChain::getSolverName() const { return solver_name_; }
 
-}  // namespace tesseract_kinematics
+}  // namespace tesseract::kinematics
