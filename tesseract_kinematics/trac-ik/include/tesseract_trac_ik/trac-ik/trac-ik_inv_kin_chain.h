@@ -95,14 +95,14 @@ public:
                     TRAC_IK::SolveType solve_type = SOLVE_TYPE);
 
   void calcInvKin(IKSolutions& solutions,
-                  const tesseract::common::TransformMap& tip_link_poses,
+                  const tesseract::common::LinkIdTransformMap& tip_link_poses,
                   const Eigen::Ref<const Eigen::VectorXd>& seed) const override final;
 
-  std::vector<std::string> getJointNames() const override final;
+  std::vector<tesseract::common::JointId> getJointIds() const override final;
   Eigen::Index numJoints() const override final;
-  std::string getBaseLinkName() const override final;
-  std::string getWorkingFrame() const override final;
-  std::vector<std::string> getTipLinkNames() const override final;
+  tesseract::common::LinkId getBaseLinkId() const override final;
+  tesseract::common::LinkId getWorkingFrameId() const override final;
+  std::vector<tesseract::common::LinkId> getTipLinkIds() const override final;
   std::string getSolverName() const override final;
   InverseKinematics::UPtr clone() const override final;
 
