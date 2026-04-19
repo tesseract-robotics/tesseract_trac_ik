@@ -74,8 +74,8 @@ public:
    * @param bounds Per-axis Cartesian tolerance [vx, vy, vz, rx, ry, rz]; zero falls back to @p epsilon
    */
   TracIKInvKinChain(const tesseract::scene_graph::SceneGraph& scene_graph,
-                    const std::string& base_link,
-                    const std::string& tip_link,
+                    tesseract::common::LinkId base_link,
+                    tesseract::common::LinkId tip_link,
                     std::string solver_name = TRACIK_INV_KIN_CHAIN_SOLVER_NAME,
                     double max_time = MAX_TIME,
                     double epsilon = EPSILON,
@@ -94,7 +94,7 @@ public:
    * @param bounds Per-axis Cartesian tolerance [vx, vy, vz, rx, ry, rz]; zero falls back to @p epsilon
    */
   TracIKInvKinChain(const tesseract::scene_graph::SceneGraph& scene_graph,
-                    const std::vector<std::pair<std::string, std::string> >& chains,
+                    const std::vector<std::pair<tesseract::common::LinkId, tesseract::common::LinkId> >& chains,
                     std::string solver_name = TRACIK_INV_KIN_CHAIN_SOLVER_NAME,
                     double max_time = MAX_TIME,
                     double epsilon = EPSILON,

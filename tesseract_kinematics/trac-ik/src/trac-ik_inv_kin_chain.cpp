@@ -38,13 +38,14 @@ namespace tesseract::kinematics
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
 
-TracIKInvKinChain::TracIKInvKinChain(const tesseract::scene_graph::SceneGraph& scene_graph,
-                                     const std::vector<std::pair<std::string, std::string>>& chains,
-                                     std::string solver_name,
-                                     double max_time,
-                                     double epsilon,
-                                     TRAC_IK::SolveType solve_type,
-                                     KDL::Twist bounds)
+TracIKInvKinChain::TracIKInvKinChain(
+    const tesseract::scene_graph::SceneGraph& scene_graph,
+    const std::vector<std::pair<tesseract::common::LinkId, tesseract::common::LinkId>>& chains,
+    std::string solver_name,
+    double max_time,
+    double epsilon,
+    TRAC_IK::SolveType solve_type,
+    KDL::Twist bounds)
   : max_time_(max_time)
   , epsilon_(epsilon)
   , solve_type_(solve_type)
@@ -63,8 +64,8 @@ TracIKInvKinChain::TracIKInvKinChain(const tesseract::scene_graph::SceneGraph& s
 }
 
 TracIKInvKinChain::TracIKInvKinChain(const tesseract::scene_graph::SceneGraph& scene_graph,
-                                     const std::string& base_link,
-                                     const std::string& tip_link,
+                                     tesseract::common::LinkId base_link,
+                                     tesseract::common::LinkId tip_link,
                                      std::string solver_name,
                                      double max_time,
                                      double epsilon,
