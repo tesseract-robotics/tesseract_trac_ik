@@ -149,7 +149,7 @@ Eigen::Index TracIKInvKinChain::numJoints() const { return kdl_data_.robot_chain
 
 tesseract::common::LinkId TracIKInvKinChain::getBaseLinkId() const { return kdl_data_.base_link_id; }
 
-tesseract::common::LinkId TracIKInvKinChain::getWorkingFrameId() const { return kdl_data_.base_link_id; }
+tesseract::common::LinkId TracIKInvKinChain::getWorkingFrame() const { return kdl_data_.base_link_id; }
 
 std::vector<tesseract::common::LinkId> TracIKInvKinChain::getTipLinkIds() const { return { kdl_data_.tip_link_id }; }
 
