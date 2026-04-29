@@ -49,10 +49,6 @@ static const TRAC_IK::SolveType SOLVE_TYPE = TRAC_IK::SolveType::Speed;
 class TracIKInvKinChain : public InverseKinematics
 {
 public:
-  // LCOV_EXCL_START
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-  // LCOV_EXCL_STOP
-
   using Ptr = std::shared_ptr<TracIKInvKinChain>;
   using ConstPtr = std::shared_ptr<const TracIKInvKinChain>;
   using UPtr = std::unique_ptr<TracIKInvKinChain>;
@@ -68,13 +64,13 @@ public:
    * @brief Construct Inverse Kinematics as chain
    * Creates a inverse kinematic chain object
    * @param scene_graph The Tesseract Scene Graph
-   * @param base_link The name of the base link for the kinematic chain
-   * @param tip_link The name of the tip link for the kinematic chain
+   * @param base_link The id of the base link for the kinematic chain
+   * @param tip_link The id of the tip link for the kinematic chain
    * @param solver_name The name of the kinematic chain
    */
   TracIKInvKinChain(const tesseract::scene_graph::SceneGraph& scene_graph,
-                    tesseract::common::LinkId base_link,
-                    tesseract::common::LinkId tip_link,
+                    const tesseract::common::LinkId& base_link,
+                    const tesseract::common::LinkId& tip_link,
                     std::string solver_name = TRACIK_INV_KIN_CHAIN_SOLVER_NAME,
                     double max_time = MAX_TIME,
                     double epsilon = EPSILON,

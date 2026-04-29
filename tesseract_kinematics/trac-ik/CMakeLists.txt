@@ -24,7 +24,8 @@ target_link_libraries(
          console_bridge::console_bridge)
 target_compile_options(${PROJECT_NAME}_trac-ik PRIVATE ${TESSERACT_COMPILE_OPTIONS_PRIVATE})
 target_compile_options(${PROJECT_NAME}_trac-ik PUBLIC ${TESSERACT_COMPILE_OPTIONS_PUBLIC})
-target_compile_definitions(${PROJECT_NAME}_trac-ik PUBLIC ${TESSERACT_COMPILE_DEFINITIONS})
+target_compile_definitions(${PROJECT_NAME}_trac-ik PRIVATE ${TESSERACT_COMPILE_DEFINITIONS_PRIVATE})
+target_compile_definitions(${PROJECT_NAME}_trac-ik PUBLIC ${TESSERACT_COMPILE_DEFINITIONS_PUBLIC})
 target_clang_tidy(${PROJECT_NAME}_trac-ik ENABLE ${TESSERACT_ENABLE_CLANG_TIDY})
 target_cxx_version(${PROJECT_NAME}_trac-ik PUBLIC VERSION ${TESSERACT_CXX_VERSION})
 target_code_coverage(
@@ -46,7 +47,8 @@ target_link_libraries(
          console_bridge::console_bridge)
 target_compile_options(${PROJECT_NAME}_trac-ik_factory PRIVATE ${TESSERACT_COMPILE_OPTIONS_PRIVATE})
 target_compile_options(${PROJECT_NAME}_trac-ik_factory PUBLIC ${TESSERACT_COMPILE_OPTIONS_PUBLIC})
-target_compile_definitions(${PROJECT_NAME}_trac-ik_factory PUBLIC ${TESSERACT_COMPILE_DEFINITIONS})
+target_compile_definitions(${PROJECT_NAME}_trac-ik_factory PRIVATE ${TESSERACT_COMPILE_DEFINITIONS_PRIVATE})
+target_compile_definitions(${PROJECT_NAME}_trac-ik_factory PUBLIC ${TESSERACT_COMPILE_DEFINITIONS_PUBLIC})
 target_clang_tidy(${PROJECT_NAME}_trac-ik_factory ENABLE ${TESSERACT_ENABLE_CLANG_TIDY})
 target_cxx_version(${PROJECT_NAME}_trac-ik_factory PUBLIC VERSION ${TESSERACT_CXX_VERSION})
 target_code_coverage(
