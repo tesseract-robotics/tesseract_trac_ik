@@ -60,6 +60,15 @@ target_compile_definitions(${PROJECT_NAME}_trac-ik PRIVATE TESSERACT_KINEMATICS_
 #   add_subdirectory(test)
 # endif()
 
+# Benchmarks (opt-in — pulls rclcpp and ROS interface libraries through trac_ik_lib).
+# Defaults to ON whenever the workspace-wide TESSERACT_ENABLE_BENCHMARKING flag is set,
+# so ./colcon_tesseract.sh builds this benchmark alongside the core ones.
+# option(TESSERACT_TRAC_IK_ENABLE_BENCHMARKING "Build the Trac-IK vs RTP/KDL benchmark"
+#        ${TESSERACT_ENABLE_BENCHMARKING})
+# if(TESSERACT_TRAC_IK_ENABLE_BENCHMARKING AND TESSERACT_BUILD_TRACIK)
+#   add_subdirectory(test/benchmarks)
+# endif()
+
 configure_package(COMPONENT trac-ik SUPPORTED_COMPONENTS ${SUPPORTED_COMPONENTS})
 
 if(TESSERACT_PACKAGE)

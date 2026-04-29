@@ -38,8 +38,8 @@ TracIKInvKinChainFactory::create(const std::string& solver_name,
                                  const KinematicsPluginFactory& /*plugin_factory*/,
                                  const YAML::Node& config) const
 {
-  std::string base_link;
-  std::string tip_link;
+  common::LinkId base_link;
+  common::LinkId tip_link;
   double max_time = MAX_TIME;
   double epsilon = EPSILON;
   TRAC_IK::SolveType solve_type = SOLVE_TYPE;
@@ -48,12 +48,12 @@ TracIKInvKinChainFactory::create(const std::string& solver_name,
   try
   {
     if (const YAML::Node& n = config["base_link"])
-      base_link = n.as<std::string>();
+      base_link = common::LinkId(n.as<std::string>());
     else
       throw std::runtime_error("TracIKInvKinChainFactory, missing 'base_link' entry");
 
     if (const YAML::Node& n = config["tip_link"])
-      tip_link = n.as<std::string>();
+      tip_link = common::LinkId(n.as<std::string>());
     else
       throw std::runtime_error("TracIKInvKinChainFactory, missing 'tip_link' entry");
 

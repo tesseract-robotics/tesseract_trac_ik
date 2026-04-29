@@ -65,8 +65,8 @@ public:
    * @brief Construct Inverse Kinematics as chain
    * Creates a inverse kinematic chain object
    * @param scene_graph The Tesseract Scene Graph
-   * @param base_link The name of the base link for the kinematic chain
-   * @param tip_link The name of the tip link for the kinematic chain
+   * @param base_link The id of the base link for the kinematic chain
+   * @param tip_link The id of the tip link for the kinematic chain
    * @param solver_name The name of the kinematic chain
    * @param max_time Per-query deadline in seconds
    * @param epsilon Maximum deviation between target pose and IK solution
@@ -74,8 +74,8 @@ public:
    * @param bounds Per-axis Cartesian tolerance [vx, vy, vz, rx, ry, rz]; zero falls back to @p epsilon
    */
   TracIKInvKinChain(const tesseract::scene_graph::SceneGraph& scene_graph,
-                    tesseract::common::LinkId base_link,
-                    tesseract::common::LinkId tip_link,
+                    const tesseract::common::LinkId& base_link,
+                    const tesseract::common::LinkId& tip_link,
                     std::string solver_name = TRACIK_INV_KIN_CHAIN_SOLVER_NAME,
                     double max_time = MAX_TIME,
                     double epsilon = EPSILON,
