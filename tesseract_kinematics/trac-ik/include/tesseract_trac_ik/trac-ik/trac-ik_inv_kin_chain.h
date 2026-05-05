@@ -42,6 +42,7 @@ static const std::string TRACIK_INV_KIN_CHAIN_SOLVER_NAME = "TracIKInvKinChain";
 static const double MAX_TIME = 0.005;
 static const double EPSILON = 1e-5;
 static const TRAC_IK::SolveType SOLVE_TYPE = TRAC_IK::SolveType::Speed;
+static const KDL::Twist BOUNDS{ KDL::Twist::Zero() };
 
 /**
  * @brief KDL Inverse kinematic chain implementation.
@@ -49,10 +50,6 @@ static const TRAC_IK::SolveType SOLVE_TYPE = TRAC_IK::SolveType::Speed;
 class TracIKInvKinChain : public InverseKinematics
 {
 public:
-  // LCOV_EXCL_START
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-  // LCOV_EXCL_STOP
-
   using Ptr = std::shared_ptr<TracIKInvKinChain>;
   using ConstPtr = std::shared_ptr<const TracIKInvKinChain>;
   using UPtr = std::unique_ptr<TracIKInvKinChain>;
@@ -71,6 +68,10 @@ public:
    * @param base_link The name of the base link for the kinematic chain
    * @param tip_link The name of the tip link for the kinematic chain
    * @param solver_name The name of the kinematic chain
+   * @param max_time Per-query deadline in seconds
+   * @param epsilon Maximum deviation between target pose and IK solution
+   * @param solve_type Solution selection strategy (Speed, Distance, Manip1, Manip2)
+   * @param bounds Per-axis Cartesian tolerance [vx, vy, vz, rx, ry, rz]; zero falls back to @p epsilon
    */
   TracIKInvKinChain(const tesseract::scene_graph::SceneGraph& scene_graph,
                     const std::string& base_link,
@@ -78,7 +79,8 @@ public:
                     std::string solver_name = TRACIK_INV_KIN_CHAIN_SOLVER_NAME,
                     double max_time = MAX_TIME,
                     double epsilon = EPSILON,
-                    TRAC_IK::SolveType solve_type = SOLVE_TYPE);
+                    TRAC_IK::SolveType solve_type = SOLVE_TYPE,
+                    KDL::Twist bounds = BOUNDS);
 
   /**
    * @brief Construct Inverse Kinematics as chain
@@ -86,13 +88,18 @@ public:
    * @param scene_graph The Tesseract Scene Graph
    * @param chains A vector of kinematics chains <base_link, tip_link> that get concatenated
    * @param solver_name The solver name of the kinematic chain
+   * @param max_time Per-query deadline in seconds
+   * @param epsilon Maximum deviation between target pose and IK solution
+   * @param solve_type Solution selection strategy (Speed, Distance, Manip1, Manip2)
+   * @param bounds Per-axis Cartesian tolerance [vx, vy, vz, rx, ry, rz]; zero falls back to @p epsilon
    */
   TracIKInvKinChain(const tesseract::scene_graph::SceneGraph& scene_graph,
                     const std::vector<std::pair<std::string, std::string> >& chains,
                     std::string solver_name = TRACIK_INV_KIN_CHAIN_SOLVER_NAME,
                     double max_time = MAX_TIME,
                     double epsilon = EPSILON,
-                    TRAC_IK::SolveType solve_type = SOLVE_TYPE);
+                    TRAC_IK::SolveType solve_type = SOLVE_TYPE,
+                    KDL::Twist bounds = BOUNDS);
 
   void calcInvKin(IKSolutions& solutions,
                   const tesseract::common::TransformMap& tip_link_poses,
@@ -110,6 +117,7 @@ private:
   double max_time_{ MAX_TIME };
   double epsilon_{ EPSILON };
   TRAC_IK::SolveType solve_type_{ SOLVE_TYPE };
+  KDL::Twist bounds_{ BOUNDS };
   KDLChainData kdl_data_;                                       /**< @brief KDL data parsed from Scene Graph */
   std::unique_ptr<TRAC_IK::TRAC_IK> ik_solver_;                 /**< @brief Trac-IK Inverse kinematic solver */
   std::string solver_name_{ TRACIK_INV_KIN_CHAIN_SOLVER_NAME }; /**< @brief Name of this solver */

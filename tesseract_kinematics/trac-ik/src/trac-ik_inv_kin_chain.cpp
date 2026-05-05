@@ -43,8 +43,13 @@ TracIKInvKinChain::TracIKInvKinChain(const tesseract::scene_graph::SceneGraph& s
                                      std::string solver_name,
                                      double max_time,
                                      double epsilon,
-                                     TRAC_IK::SolveType solve_type)
-  : max_time_(max_time), epsilon_(epsilon), solve_type_(solve_type), solver_name_(std::move(solver_name))
+                                     TRAC_IK::SolveType solve_type,
+                                     KDL::Twist bounds)
+  : max_time_(max_time)
+  , epsilon_(epsilon)
+  , solve_type_(solve_type)
+  , bounds_(bounds)
+  , solver_name_(std::move(solver_name))
 {
   if (!scene_graph.getLink(scene_graph.getRoot()))
     throw std::runtime_error("The scene graph has an invalid root");
@@ -63,13 +68,15 @@ TracIKInvKinChain::TracIKInvKinChain(const tesseract::scene_graph::SceneGraph& s
                                      std::string solver_name,
                                      double max_time,
                                      double epsilon,
-                                     TRAC_IK::SolveType solve_type)
+                                     TRAC_IK::SolveType solve_type,
+                                     KDL::Twist bounds)
   : TracIKInvKinChain(scene_graph,
                       { std::make_pair(base_link, tip_link) },
                       std::move(solver_name),
                       max_time,
                       epsilon,
-                      solve_type)
+                      solve_type,
+                      bounds)
 {
 }
 
@@ -83,6 +90,7 @@ TracIKInvKinChain& TracIKInvKinChain::operator=(const TracIKInvKinChain& other)
   max_time_ = other.max_time_;
   epsilon_ = other.epsilon_;
   solve_type_ = other.solve_type_;
+  bounds_ = other.bounds_;
   ik_solver_ = std::make_unique<TRAC_IK::TRAC_IK>(
       kdl_data_.robot_chain, kdl_data_.q_min, kdl_data_.q_max, max_time_, epsilon_, solve_type_);
   solver_name_ = other.solver_name_;
@@ -107,7 +115,7 @@ void TracIKInvKinChain::calcInvKinHelper(IKSolutions& solutions,
   int status{ -1 };
   {
     std::lock_guard<std::mutex> guard(mutex_);
-    status = ik_solver_->CartToJnt(kdl_seed, kdl_pose, kdl_solution);
+    status = ik_solver_->CartToJnt(kdl_seed, kdl_pose, kdl_solution, bounds_);
   }
   if (status < 0)
   {

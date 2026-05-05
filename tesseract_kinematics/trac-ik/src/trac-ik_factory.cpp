@@ -27,6 +27,8 @@
 #include <tesseract_trac_ik/trac-ik/trac-ik_factory.h>
 #include <tesseract_trac_ik/trac-ik/trac-ik_inv_kin_chain.h>
 
+#include <vector>
+
 namespace tesseract::kinematics
 {
 std::unique_ptr<InverseKinematics>
@@ -41,6 +43,7 @@ TracIKInvKinChainFactory::create(const std::string& solver_name,
   double max_time = MAX_TIME;
   double epsilon = EPSILON;
   TRAC_IK::SolveType solve_type = SOLVE_TYPE;
+  KDL::Twist bounds = BOUNDS;
 
   try
   {
@@ -66,19 +69,20 @@ TracIKInvKinChainFactory::create(const std::string& solver_name,
       }
       if (const YAML::Node& n = params["solve_type"])
       {
-        if (n.as<std::string>() == "Speed")
+        const auto type = n.as<std::string>();
+        if (type == "Speed")
         {
           solve_type = TRAC_IK::SolveType::Speed;
         }
-        else if (n.as<std::string>() == "Distance")
+        else if (type == "Distance")
         {
           solve_type = TRAC_IK::SolveType::Distance;
         }
-        else if (n.as<std::string>() == "Manip1")
+        else if (type == "Manip1")
         {
           solve_type = TRAC_IK::SolveType::Manip1;
         }
-        else if (n.as<std::string>() == "Manip2")
+        else if (type == "Manip2")
         {
           solve_type = TRAC_IK::SolveType::Manip2;
         }
@@ -86,6 +90,13 @@ TracIKInvKinChainFactory::create(const std::string& solver_name,
         {
           throw std::runtime_error("TracIKInvKinChainFactory, 'params' entry 'solve_type' invalid");
         }
+      }
+      if (const YAML::Node& n = params["bounds"])
+      {
+        const auto v = n.as<std::vector<double>>();
+        if (v.size() != 6)
+          throw std::runtime_error("TracIKInvKinChainFactory, 'params' entry 'bounds' must have 6 elements");
+        bounds = KDL::Twist(KDL::Vector(v[0], v[1], v[2]), KDL::Vector(v[3], v[4], v[5]));
       }
     }
   }
@@ -96,7 +107,7 @@ TracIKInvKinChainFactory::create(const std::string& solver_name,
   }
 
   return std::make_unique<TracIKInvKinChain>(
-      scene_graph, base_link, tip_link, solver_name, max_time, epsilon, solve_type);
+      scene_graph, base_link, tip_link, solver_name, max_time, epsilon, solve_type, bounds);
 }
 
 PLUGIN_ANCHOR_IMPL(TracIKFactoryAnchor)
