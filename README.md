@@ -26,8 +26,9 @@ kinematic_plugins:
 ### Parameters
 
 - _epsilon:_ Maximum deviation between target pose and IK solution.
-- _max_time:_ Maximum calculation time for Distance, Manip1 and Manip2 solve types.
+- _max_time:_ Maximum calculation time per IK query (seconds). Speed returns as soon as a solution is found or this deadline is hit; Distance/Manip1/Manip2 keep searching until the deadline and return the best solution found.
 - _solve_type:_ (Speed/Distance/Manip1/Manip2) Speed: return first feasible solution, Distance: return solution closest to seed, Manip1/Manip2: use one of two manipulabilty metrics to find the best solution.
+- _bounds:_ Per-axis Cartesian tolerance applied to every IK query, as a 6-element sequence `[vx, vy, vz, rx, ry, rz]` (linear x/y/z then angular x/y/z, in meters and radians). Any solution whose pose lies within these bounds of the target is accepted. All zeros (default) disables tolerance and falls back to `epsilon`.
 
 #### Parameter defaults
 ```
@@ -40,6 +41,7 @@ kinematic_plugins:
               epsilon: 1e-5
               max_time: 0.005
               solve_type: Speed
+              bounds: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 ```
 
 ## Future work
