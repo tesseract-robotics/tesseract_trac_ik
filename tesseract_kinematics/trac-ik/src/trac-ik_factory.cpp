@@ -103,15 +103,15 @@ TracIKInvKinChainFactory::create(const std::string& solver_name,
         bounds = KDL::Twist(KDL::Vector(v[0], v[1], v[2]), KDL::Vector(v[3], v[4], v[5]));
       }
     }
+
+    return std::make_unique<TracIKInvKinChain>(
+        scene_graph, base_link, tip_link, solver_name, max_time, epsilon, solve_type, bounds);
   }
   catch (const std::exception& e)
   {
     CONSOLE_BRIDGE_logError("TracIKInvKinChainFactory: Failed to parse yaml config data! Details: %s", e.what());
     return nullptr;
   }
-
-  return std::make_unique<TracIKInvKinChain>(
-      scene_graph, base_link, tip_link, solver_name, max_time, epsilon, solve_type, bounds);
 }
 
 PLUGIN_ANCHOR_IMPL(TracIKFactoryAnchor)
