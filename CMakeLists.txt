@@ -54,11 +54,10 @@ string(
 target_compile_definitions(${PROJECT_NAME}_trac-ik PRIVATE TESSERACT_KINEMATICS_PLUGINS="${KINEMATICS_PLUGINS_STRING}")
 
 # Testing
-# if((TESSERACT_ENABLE_TESTING OR TESSERACT_KINEMATICS_ENABLE_TESTING)
-#    AND TESSERACT_BUILD_TRACIK)
-#   enable_testing()
-#   add_subdirectory(test)
-# endif()
+if((TESSERACT_ENABLE_TESTING OR TESSERACT_KINEMATICS_ENABLE_TESTING) AND TESSERACT_BUILD_TRACIK)
+  enable_testing()
+  add_subdirectory(test)
+endif()
 
 configure_package(COMPONENT trac-ik SUPPORTED_COMPONENTS ${SUPPORTED_COMPONENTS})
 
