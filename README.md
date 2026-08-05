@@ -7,6 +7,10 @@ This plugin is not included in the main Tesseract repository, as [trac_ik_lib](h
 ## Usage
 
 - Clone this repo to the `src` folder of your project.
+- Build `trac_ik_lib` **2.2.0 or newer** from source (see `dependencies.repos`). The ROS binary releases are too old
+  (Jazzy ships 2.0.2): 2.1.0 replaced the constructor's `rclcpp::Node::SharedPtr` with an `rclcpp::Logger`, and 2.2.0
+  added `Manip3`. Uninstall `ros-<distro>-trac-ik-lib` or make sure the workspace overlay is sourced after
+  `/opt/ros/<distro>/setup.bash`, so both the build and the loader pick up the source build.
 - Add `tesseract_trac_ik_trac-ik_factory` to the `search_libraries` of your robot's `kinematic_plugins.yml`.
 - Add Trac-IK to the `inv_kin_plugins` of your robot manipulator:
 
