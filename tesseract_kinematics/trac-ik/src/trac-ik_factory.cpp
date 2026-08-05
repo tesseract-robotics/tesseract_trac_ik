@@ -86,6 +86,10 @@ TracIKInvKinChainFactory::create(const std::string& solver_name,
         {
           solve_type = TRAC_IK::SolveType::Manip2;
         }
+        else if (type == "Manip3")
+        {
+          solve_type = TRAC_IK::SolveType::Manip3;
+        }
         else
         {
           throw std::runtime_error("TracIKInvKinChainFactory, 'params' entry 'solve_type' invalid");

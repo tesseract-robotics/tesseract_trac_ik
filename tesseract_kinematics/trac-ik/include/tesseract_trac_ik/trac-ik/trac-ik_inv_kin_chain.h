@@ -70,7 +70,7 @@ public:
    * @param solver_name The name of the kinematic chain
    * @param max_time Per-query deadline in seconds
    * @param epsilon Maximum deviation between target pose and IK solution
-   * @param solve_type Solution selection strategy (Speed, Distance, Manip1, Manip2)
+   * @param solve_type Solution selection strategy (Speed, Distance, Manip1, Manip2, Manip3)
    * @param bounds Per-axis Cartesian tolerance [vx, vy, vz, rx, ry, rz]; zero falls back to @p epsilon
    */
   TracIKInvKinChain(const tesseract::scene_graph::SceneGraph& scene_graph,
@@ -90,7 +90,7 @@ public:
    * @param solver_name The solver name of the kinematic chain
    * @param max_time Per-query deadline in seconds
    * @param epsilon Maximum deviation between target pose and IK solution
-   * @param solve_type Solution selection strategy (Speed, Distance, Manip1, Manip2)
+   * @param solve_type Solution selection strategy (Speed, Distance, Manip1, Manip2, Manip3)
    * @param bounds Per-axis Cartesian tolerance [vx, vy, vz, rx, ry, rz]; zero falls back to @p epsilon
    */
   TracIKInvKinChain(const tesseract::scene_graph::SceneGraph& scene_graph,
