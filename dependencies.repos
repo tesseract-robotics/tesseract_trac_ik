@@ -1,4 +1,4 @@
 - git:
     local-name: trac_ik
-    uri: https://github.com/aprotyas/trac_ik.git
-    version: ros2
+    uri: https://github.com/traclabs/trac_ik
+    version: rolling

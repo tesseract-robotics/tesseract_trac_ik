@@ -1,4 +1,7 @@
-find_package(trac_ik_lib REQUIRED)
+# Requires 2.1.0+ for the node-less constructor (the pre-2.1.0 one takes an rclcpp::Node::SharedPtr) and 2.2.0+ for
+# SolveType::Manip3. Pinning makes CMake skip an older prefix (e.g. the ROS binary release, 2.0.2 on Jazzy) rather
+# than fail later with a confusing overload error, or link against a 2.1.x .so where Manip3 silently hits default.
+find_package(trac_ik_lib 2.2.0 REQUIRED)
 # When integrating into tesseract_kinematics remove next line
 find_package(tesseract REQUIRED COMPONENTS kinematics kinematics_kdl)
 
@@ -74,7 +77,7 @@ configure_component(
   COMPONENT trac-ik
   NAMESPACE tesseract
   TARGETS ${PROJECT_NAME}_trac-ik ${PROJECT_NAME}_trac-ik_factory
-  DEPENDENCIES trac_ik_lib "tesseract_kinematics COMPONENTS core")
+  DEPENDENCIES "trac_ik_lib 2.2.0" "tesseract_kinematics COMPONENTS core")
 
 if(TESSERACT_PACKAGE)
   cpack_component(
