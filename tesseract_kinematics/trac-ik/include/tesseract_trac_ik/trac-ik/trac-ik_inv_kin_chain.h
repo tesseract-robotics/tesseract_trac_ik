@@ -121,11 +121,12 @@ private:
   KDLChainData kdl_data_;                                       /**< @brief KDL data parsed from Scene Graph */
   std::unique_ptr<TRAC_IK::TRAC_IK> ik_solver_;                 /**< @brief Trac-IK Inverse kinematic solver */
   std::string solver_name_{ TRACIK_INV_KIN_CHAIN_SOLVER_NAME }; /**< @brief Name of this solver */
-  mutable std::mutex mutex_; /**< @brief KDL is not thread safe due to mutable variables in Joint Class */
-  // A fix exists, but no new release of KDL has been made in the meantime (KDL is still at v1.5.1 from Sep/2021):
-  // https://github.com/orocos/orocos_kinematics_dynamics/pull/399
+  /** @brief Serialises calls into ik_solver_. TRAC_IK::CartToJnt is not reentrant on a single instance: it
+   * assigns to member threads and clears its shared solution state on entry, so overlapping calls on one solver
+   * terminate the process. */
+  mutable std::mutex mutex_;
 
-  /** @brief calcFwdKin helper function */
+  /** @brief calcInvKin helper function */
   void calcInvKinHelper(IKSolutions& solutions,
                         const Eigen::Isometry3d& pose,
                         const Eigen::Ref<const Eigen::VectorXd>& seed,
