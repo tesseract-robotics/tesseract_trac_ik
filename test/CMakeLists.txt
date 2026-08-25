@@ -7,6 +7,9 @@ find_package(
              state_solver
              urdf)
 find_package(Eigen3 REQUIRED)
+# The tests link the plugin, whose interface reaches trac_ik_lib and its ROS dependencies. Imported targets are scoped
+# to the directory that found them, so without this the generate step cannot resolve them here.
+find_package(trac_ik_lib 2.2.0 REQUIRED)
 
 find_gtest()
 

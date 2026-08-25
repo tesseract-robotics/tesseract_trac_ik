@@ -1,5 +1,13 @@
 # Tesseract Trac-IK plugin
 
+Platform             | CI Status
+---------------------|:---------
+Linux                | [![Build Status](https://github.com/tesseract-robotics/tesseract_trac_ik/actions/workflows/ubuntu.yml/badge.svg)](https://github.com/tesseract-robotics/tesseract_trac_ik/actions/workflows/ubuntu.yml)
+Lint  (Clang-Format) | [![Build Status](https://github.com/tesseract-robotics/tesseract_trac_ik/actions/workflows/clang_format.yml/badge.svg)](https://github.com/tesseract-robotics/tesseract_trac_ik/actions/workflows/clang_format.yml)
+Lint  (CMake-Format) | [![Build Status](https://github.com/tesseract-robotics/tesseract_trac_ik/actions/workflows/cmake_format.yml/badge.svg)](https://github.com/tesseract-robotics/tesseract_trac_ik/actions/workflows/cmake_format.yml)
+Lint  (Clang-Tidy)   | [![Build Status](https://github.com/tesseract-robotics/tesseract_trac_ik/actions/workflows/code_quality.yml/badge.svg)](https://github.com/tesseract-robotics/tesseract_trac_ik/actions/workflows/code_quality.yml)
+Lint  (CodeCov)      | [![Build Status](https://github.com/tesseract-robotics/tesseract_trac_ik/actions/workflows/code_quality.yml/badge.svg)](https://github.com/tesseract-robotics/tesseract_trac_ik/actions/workflows/code_quality.yml)
+
 This is a [Trac-IK](https://traclabs.com/projects/trac-ik/) plugin for `tesseract_kinematics`.
 
 This plugin is not included in the main Tesseract repository, as [trac_ik_lib](https://bitbucket.org/traclabs/trac_ik/) is ROS-dependent.

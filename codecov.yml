@@ -1,5 +1,10 @@
 codecov:
   require_ci_to_pass: false
+  disable_default_path_fixes: true
+
+# Coverage is produced inside the CI workspace, so strip that prefix to get repository-relative paths.
+fixes:
+  - "/__w/tesseract_trac_ik/tesseract_trac_ik/target_ws/src/::"
 
 coverage:
   precision: 2

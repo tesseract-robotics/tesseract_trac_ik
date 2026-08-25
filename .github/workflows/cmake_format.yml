@@ -1,0 +1,32 @@
+name: CMake-Format
+
+on:
+  push:
+    branches:
+      - main
+      - 'dev**'
+  pull_request:
+  schedule:
+    - cron: '0 5 * * *'
+
+# Supersede in-progress pull-request runs; queue everything else so two runs on one ref never race.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  cmake_format:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Run CMake Lang Format Check
+        run: |
+          sudo pip3 install cmakelang
+          RED='\033[0;31m'
+          NC='\033[0m' # No Color
+          ./.run-cmake-format
+          output=$(git diff)
+          if [ -n "$output" ]; then printf "${RED}CMake format error: run script './.run-cmake-format'${NC}\n"; fi
+          if [ -n "$output" ]; then printf "${RED}${output}${NC}\n"; fi
+          if [ -n "$output" ]; then exit 1; else exit 0; fi

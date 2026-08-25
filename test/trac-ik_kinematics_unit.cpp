@@ -148,7 +148,7 @@ TEST(TesseractKinematicsUnit, TracIKInvKinCloneUnit)  // NOLINT
   const TracIKInvKinChain inv_kin(*scene_graph, BASE_LINK, TIP_LINK, custom_solver_name, TEST_MAX_TIME);
 
   // Both the copy and the clone rebuild the underlying solver rather than sharing it
-  const TracIKInvKinChain copied(inv_kin);
+  const TracIKInvKinChain copied(inv_kin);  // NOLINT(performance-unnecessary-copy-initialization)
   EXPECT_EQ(copied.getSolverName(), custom_solver_name);
   EXPECT_EQ(copied.getJointIds(), inv_kin.getJointIds());
   expectSolvesRoundTrip(copied, fwd_kin);

@@ -1,0 +1,99 @@
+name: Code Quality
+
+on:
+  push:
+    branches:
+      - main
+      - 'dev**'
+  pull_request:
+  schedule:
+    - cron: '0 5 * * *'
+
+# Supersede in-progress pull-request runs; queue everything else so two runs on one ref never race.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  ci:
+    name: ${{ matrix.job_type }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        job_type: [clang-tidy, codecov]
+        include:
+          - job_type: clang-tidy
+            env:
+              TARGET_CMAKE_ARGS: "-DCMAKE_BUILD_TYPE=Debug -DTESSERACT_ENABLE_CLANG_TIDY=ON -DTESSERACT_ENABLE_TESTING=ON -DCLANG_TIDY_NAMES=clang-tidy-17"
+          - job_type: codecov
+            env:
+              TARGET_CMAKE_ARGS: "-DCMAKE_BUILD_TYPE=Debug -DTESSERACT_ENABLE_CODE_COVERAGE=ON -DTESSERACT_WARNINGS_AS_ERRORS=OFF"
+    container:
+      # Noble/Jazzy only: trac_ik_lib 2.2.0, which this package requires, ships on the trac_ik rolling branch.
+      image: ghcr.io/tesseract-robotics/tesseract:noble-master
+      env:
+        DEBIAN_FRONTEND: noninteractive
+        TZ: Etc/UTC
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          path: target_ws/src
+          # Codecov resolves a pull request's head commit by walking back from the merge commit, which the
+          # default depth of 1 does not contain; without it the upload is rejected as an unknown commit.
+          fetch-depth: 0
+
+      - name: Install Depends
+        shell: bash
+        run: |
+          apt update -qq
+          apt install -y wget ros-jazzy-ros-base
+          echo "deb http://apt.llvm.org/noble/ llvm-toolchain-noble-17 main" | tee /etc/apt/sources.list.d/llvm-toolchain.list
+          echo "deb-src http://apt.llvm.org/noble/ llvm-toolchain-noble-17 main" | tee -a /etc/apt/sources.list.d/llvm-toolchain.list
+          wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | tee /etc/apt/trusted.gpg.d/llvm.asc
+          apt update -y
+          apt install -y clang-tidy-17
+
+      - name: Build and Tests
+        uses: tesseract-robotics/colcon-action@v15
+        with:
+          before-script: source /opt/tesseract/install/setup.bash && source /opt/ros/jazzy/setup.bash
+          ccache-prefix: ${{ matrix.job_type }}
+          vcs-file: dependencies.repos
+          run-tests: false
+          # moveit_core is pulled in only by trac_ik_kinematics_plugin, which --packages-up-to below leaves
+          # unbuilt. trac_ik_lib is skipped so the released binary cannot shadow the newer source build.
+          rosdep-install-args: -iry --skip-keys="moveit_core trac_ik_lib"
+          # The trac_ik repository ships five packages; this plugin needs only the library.
+          upstream-args: --packages-up-to trac_ik_lib --cmake-args -DCMAKE_BUILD_TYPE=Release
+          target-path: target_ws/src
+          target-args: --cmake-args ${{ matrix.env.TARGET_CMAKE_ARGS }}
+
+      - name: Upload CodeCov Results
+        if: matrix.job_type == 'codecov'
+        shell: bash
+        run: |
+          source /opt/tesseract/install/setup.bash
+          source /opt/ros/jazzy/setup.bash
+          source $GITHUB_WORKSPACE/upstream_ws/install/setup.bash
+          source $GITHUB_WORKSPACE/target_ws/install/setup.bash
+          cd $GITHUB_WORKSPACE/target_ws
+          # lcov 2.x promotes to fatal two things lcov 1.x tolerated: a GCC line-table mismatch in gtest's
+          # generated test bodies, and a coverage exclude pattern that matches nothing. The capture command in
+          # ros_industrial_cmake_boilerplate accepts no flags, so downgrade both through the rc file.
+          echo "ignore_errors = mismatch,unused" > ~/.lcovrc
+          colcon build --cmake-target ccov-all --packages-select tesseract_trac_ik
+          # Upload from the checkout, not the workspace root: the uploader reads the commit from git, and only
+          # here is there a repository to read. -Z makes a rejected upload fail the job rather than pass silently.
+          cd $GITHUB_WORKSPACE/target_ws/src
+          bash <(curl -s https://codecov.io/bash) -Z -X gcov -t 05b50b54-5141-470a-953b-88a26328452d \
+            -f $GITHUB_WORKSPACE/target_ws/build/tesseract_trac_ik/ccov/all-merged.info
+
+      - name: Upload coverage artifacts
+        if: matrix.job_type == 'codecov'
+        uses: actions/upload-artifact@v7
+        with:
+          name: codecov-raw-info
+          path: ${{ github.workspace }}/target_ws/build/**/all-merged.info
+          retention-days: 7
