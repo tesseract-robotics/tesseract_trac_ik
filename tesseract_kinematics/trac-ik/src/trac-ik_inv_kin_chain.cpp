@@ -49,7 +49,7 @@ TracIKInvKinChain::TracIKInvKinChain(
   : max_time_(max_time)
   , epsilon_(epsilon)
   , solve_type_(solve_type)
-  , bounds_(bounds)
+  , bounds_(std::move(bounds))
   , solver_name_(std::move(solver_name))
 {
   if (!scene_graph.getLink(scene_graph.getRoot()))
@@ -77,7 +77,7 @@ TracIKInvKinChain::TracIKInvKinChain(const tesseract::scene_graph::SceneGraph& s
                       max_time,
                       epsilon,
                       solve_type,
-                      bounds)
+                      std::move(bounds))
 {
 }
 
