@@ -1,4 +1,6 @@
+# rolling-jazzy is traclabs' rolling plus a guard around <urdf/model.hpp>, a header only Kilted and Rolling
+# ship; Jazzy and Humble have urdf/model.h. Point back at traclabs/trac_ik rolling once that guard lands there.
 - git:
     local-name: trac_ik
-    uri: https://github.com/traclabs/trac_ik
-    version: rolling
+    uri: https://github.com/rjoomen/trac_ik
+    version: rolling-jazzy
