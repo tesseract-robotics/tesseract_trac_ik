@@ -28,11 +28,13 @@ kinematic_plugins:
     - tesseract_trac_ik_trac-ik_factory
   inv_kin_plugins:
     manipulator:
-      TracIKInvKinChain:
-        class: TracIKInvKinChainFactory
-        config:
-          base_link: base
-          tip_link: tool0
+      default: TracIKInvKinChain
+      plugins:
+        TracIKInvKinChain:
+          class: TracIKInvKinChainFactory
+          config:
+            base_link: base
+            tip_link: tool0
 ```
 
 ### Parameters
@@ -44,12 +46,12 @@ kinematic_plugins:
 
 #### Parameter defaults
 ```
-      TracIKInvKinChain:
-        class: TracIKInvKinChainFactory
-        config:
-          base_link: base
-          tip_link: tool0
-          params:
+        TracIKInvKinChain:
+          class: TracIKInvKinChainFactory
+          config:
+            base_link: base
+            tip_link: tool0
+            params:
               epsilon: 1e-5
               max_time: 0.005
               solve_type: Speed
