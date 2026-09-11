@@ -27,10 +27,38 @@
 #include <tesseract_trac_ik/trac-ik/trac-ik_factory.h>
 #include <tesseract_trac_ik/trac-ik/trac-ik_inv_kin_chain.h>
 
+#include <tesseract/common/property_tree.h>
+#include <tesseract/common/schema_registration.h>
+
 #include <vector>
+
+namespace
+{
+tesseract::common::PropertyTree tracIKInvKinChainFactorySchema()
+{
+  using namespace tesseract::common;
+  // clang-format off
+  return PropertyTreeBuilder()
+      .attribute(property_attribute::TYPE, property_type::CONTAINER)
+      .string("base_link").required().minimumLength(1).done()
+      .string("tip_link").required().minimumLength(1).done()
+      .container("params")
+          .float64("max_time").minimum(0.0).done()
+          .float64("epsilon").minimum(0.0).done()
+          // Must list every TRAC_IK::SolveType create() accepts
+          .string("solve_type").enumValues({ "Speed", "Distance", "Manip1", "Manip2", "Manip3" }).done()
+          // A full twist: linear x/y/z then angular x/y/z
+          .customType("bounds", property_type::createList(property_type::FLOAT64, 6)).done()
+          .done()
+      .build();
+  // clang-format on
+}
+}  // namespace
 
 namespace tesseract::kinematics
 {
+tesseract::common::PropertyTree TracIKInvKinChainFactory::schema() const { return tracIKInvKinChainFactorySchema(); }
+
 std::unique_ptr<InverseKinematics>
 TracIKInvKinChainFactory::create(const std::string& solver_name,
                                  const tesseract::scene_graph::SceneGraph& scene_graph,
@@ -120,3 +148,5 @@ PLUGIN_ANCHOR_IMPL(TracIKFactoryAnchor)
 
 // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
 TESSERACT_ADD_INV_KIN_PLUGIN(tesseract::kinematics::TracIKInvKinChainFactory, TracIKInvKinChainFactory);
+TESSERACT_SCHEMA_REGISTER(TracIKInvKinChainFactory, tracIKInvKinChainFactorySchema);
+TESSERACT_SCHEMA_REGISTER_DERIVED_TYPE(tesseract::kinematics::InvKinFactory, TracIKInvKinChainFactory);

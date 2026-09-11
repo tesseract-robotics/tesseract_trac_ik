@@ -39,6 +39,7 @@ class TracIKInvKinChainFactory : public InvKinFactory
                                             const tesseract::scene_graph::SceneState& scene_state,
                                             const KinematicsPluginFactory& plugin_factory,
                                             const YAML::Node& config) const override final;
+  tesseract::common::PropertyTree schema() const override;
 };
 
 PLUGIN_ANCHOR_DECL(TracIKFactoryAnchor)
