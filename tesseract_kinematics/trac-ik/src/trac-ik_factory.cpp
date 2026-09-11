@@ -30,10 +30,43 @@
 #include <tesseract/common/property_tree.h>
 #include <tesseract/common/schema_registration.h>
 
+#include <array>
+#include <string_view>
+#include <utility>
 #include <vector>
 
 namespace
 {
+// Every TRAC_IK::SolveType the factory accepts. The schema's enum and create()'s lookup both read
+// this table, so a solver type cannot be declared in one and forgotten in the other.
+constexpr std::array<std::pair<std::string_view, TRAC_IK::SolveType>, 5> SOLVE_TYPES{
+  { { "Speed", TRAC_IK::SolveType::Speed },
+    { "Distance", TRAC_IK::SolveType::Distance },
+    { "Manip1", TRAC_IK::SolveType::Manip1 },
+    { "Manip2", TRAC_IK::SolveType::Manip2 },
+    { "Manip3", TRAC_IK::SolveType::Manip3 } }
+};
+
+/** @brief Return the solve type registered under this name, or nullptr if there is none */
+const TRAC_IK::SolveType* solveTypeNamed(std::string_view name)
+{
+  for (const auto& entry : SOLVE_TYPES)
+  {
+    if (entry.first == name)
+      return &entry.second;
+  }
+  return nullptr;
+}
+
+std::vector<std::string> solveTypeNames()
+{
+  std::vector<std::string> names;
+  names.reserve(SOLVE_TYPES.size());
+  for (const auto& [name, type] : SOLVE_TYPES)
+    names.emplace_back(name);
+  return names;
+}
+
 tesseract::common::PropertyTree tracIKInvKinChainFactorySchema()
 {
   using namespace tesseract::common;
@@ -45,8 +78,7 @@ tesseract::common::PropertyTree tracIKInvKinChainFactorySchema()
       .container("params")
           .float64("max_time").minimum(0.0).done()
           .float64("epsilon").minimum(0.0).done()
-          // Must list every TRAC_IK::SolveType create() accepts
-          .string("solve_type").enumValues({ "Speed", "Distance", "Manip1", "Manip2", "Manip3" }).done()
+          .string("solve_type").enumValues(solveTypeNames()).done()
           // A full twist: linear x/y/z then angular x/y/z
           .customType("bounds", property_type::createList(property_type::FLOAT64, 6)).done()
           .done()
@@ -98,30 +130,10 @@ TracIKInvKinChainFactory::create(const std::string& solver_name,
       if (const YAML::Node& n = params["solve_type"])
       {
         const auto type = n.as<std::string>();
-        if (type == "Speed")
-        {
-          solve_type = TRAC_IK::SolveType::Speed;
-        }
-        else if (type == "Distance")
-        {
-          solve_type = TRAC_IK::SolveType::Distance;
-        }
-        else if (type == "Manip1")
-        {
-          solve_type = TRAC_IK::SolveType::Manip1;
-        }
-        else if (type == "Manip2")
-        {
-          solve_type = TRAC_IK::SolveType::Manip2;
-        }
-        else if (type == "Manip3")
-        {
-          solve_type = TRAC_IK::SolveType::Manip3;
-        }
-        else
-        {
+        const auto* match = solveTypeNamed(type);
+        if (match == nullptr)
           throw std::runtime_error("TracIKInvKinChainFactory, 'params' entry 'solve_type' invalid");
-        }
+        solve_type = *match;
       }
       if (const YAML::Node& n = params["bounds"])
       {
