@@ -47,3 +47,4 @@ endmacro()
 
 add_trac_ik_gtest(${PROJECT_NAME}_kinematics_unit trac-ik_kinematics_unit.cpp)
 add_trac_ik_gtest(${PROJECT_NAME}_factory_unit trac-ik_factory_unit.cpp)
+add_trac_ik_gtest(${PROJECT_NAME}_factory_schema_unit trac-ik_factory_schema_unit.cpp)
