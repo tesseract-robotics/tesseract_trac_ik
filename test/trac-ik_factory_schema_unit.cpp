@@ -72,8 +72,7 @@ std::vector<std::string> validate(const std::string& config)
   // reparents the block under a neighbouring key instead of failing where the mistake is.
   node["inv_kin_plugins"]["manipulator"]["plugins"]["TracIKInvKinChain"]["config"] = YAML::Load(config);
 
-  schema.mergeConfig(node);
-  return schema.validate();
+  return schema.applyConfig(node);
 }
 }  // namespace
 
@@ -99,7 +98,7 @@ params:
 TEST(TracIKFactorySchemaUnit, AcceptsEmptyParams)  // NOLINT
 {
   // Every parameter is optional, so a params block that declares none of them is still a valid
-  // config and create() falls back to the defaults throughout
+  // config and the factory falls back to the defaults throughout
   const auto errors = validate(R"(base_link: base_link
 tip_link: tool0
 params:)");
@@ -220,16 +219,16 @@ params:
   EXPECT_NE(message.find("does not match expected 6"), std::string::npos) << message;
 }
 
-TEST(TracIKFactorySchemaUnit, AcceptsBoundsWhoseElementsAreNotNumbers)  // NOLINT
+TEST(TracIKFactorySchemaUnit, RejectsBoundsWhoseElementsAreNotNumbers)  // NOLINT
 {
-  // The sequence check covers length only, because float64 is not a registry key and so no element
-  // validator is attached. Element types stay create()'s responsibility, which is why its own check
-  // must not be removed in favour of the schema.
+  // Each element is checked against float64, so the factory can read bounds without its own check
   const auto errors = validate(R"(base_link: base_link
 tip_link: tool0
 params:
-  bounds: [a, b, c, d, e, f])");
-  EXPECT_TRUE(errors.empty()) << joinErrors(errors);
+  bounds: [0.01, 0.02, c, 0.1, 0.2, 0.3])");
+  ASSERT_FALSE(errors.empty());
+  const std::string message = joinErrors(errors);
+  EXPECT_NE(message.find("bounds[2]"), std::string::npos) << message;
 }
 
 TEST(TracIKFactorySchemaUnit, FactorySchemaMatchesTheRegisteredOne)  // NOLINT

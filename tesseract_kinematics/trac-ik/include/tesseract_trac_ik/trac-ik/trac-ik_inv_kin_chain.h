@@ -113,6 +113,18 @@ public:
   std::string getSolverName() const override final;
   InverseKinematics::UPtr clone() const override final;
 
+  /** @brief Per-query deadline in seconds */
+  double getMaxTime() const;
+
+  /** @brief Maximum deviation between target pose and IK solution */
+  double getEpsilon() const;
+
+  /** @brief Solution selection strategy */
+  TRAC_IK::SolveType getSolveType() const;
+
+  /** @brief Per-axis Cartesian tolerance [vx, vy, vz, rx, ry, rz]; zero falls back to the epsilon */
+  const KDL::Twist& getBounds() const;
+
 private:
   double max_time_{ MAX_TIME };
   double epsilon_{ EPSILON };

@@ -31,13 +31,15 @@
 #include <tesseract/common/schema_registration.h>
 
 #include <array>
+#include <stdexcept>
+#include <string>
 #include <string_view>
 #include <utility>
 #include <vector>
 
 namespace
 {
-// Every TRAC_IK::SolveType the factory accepts. The schema's enum and create()'s lookup both read
+// Every TRAC_IK::SolveType the factory accepts. The schema's enum and the factory's lookup both read
 // this table, so a solver type cannot be declared in one and forgotten in the other.
 constexpr std::array<std::pair<std::string_view, TRAC_IK::SolveType>, 5> SOLVE_TYPES{
   { { "Speed", TRAC_IK::SolveType::Speed },
@@ -47,15 +49,15 @@ constexpr std::array<std::pair<std::string_view, TRAC_IK::SolveType>, 5> SOLVE_T
     { "Manip3", TRAC_IK::SolveType::Manip3 } }
 };
 
-/** @brief Return the solve type registered under this name, or nullptr if there is none */
-const TRAC_IK::SolveType* solveTypeNamed(std::string_view name)
+/** @brief Return the solve type registered under this name; throw if there is none */
+TRAC_IK::SolveType solveTypeNamed(std::string_view name)
 {
-  for (const auto& entry : SOLVE_TYPES)
+  for (const auto& [entry_name, type] : SOLVE_TYPES)
   {
-    if (entry.first == name)
-      return &entry.second;
+    if (entry_name == name)
+      return type;
   }
-  return nullptr;
+  throw std::runtime_error("TracIKInvKinChainFactory: unknown solve_type '" + std::string(name) + "'");
 }
 
 std::vector<std::string> solveTypeNames()
@@ -92,66 +94,36 @@ namespace tesseract::kinematics
 tesseract::common::PropertyTree TracIKInvKinChainFactory::schema() const { return tracIKInvKinChainFactorySchema(); }
 
 std::unique_ptr<InverseKinematics>
-TracIKInvKinChainFactory::create(const std::string& solver_name,
-                                 const tesseract::scene_graph::SceneGraph& scene_graph,
-                                 const tesseract::scene_graph::SceneState& /*scene_state*/,
-                                 const KinematicsPluginFactory& /*plugin_factory*/,
-                                 const YAML::Node& config) const
+TracIKInvKinChainFactory::createImpl(const std::string& solver_name,
+                                     const tesseract::scene_graph::SceneGraph& scene_graph,
+                                     const tesseract::scene_graph::SceneState& /*scene_state*/,
+                                     const KinematicsPluginFactory& /*plugin_factory*/,
+                                     const tesseract::common::PropertyTree& config) const
 {
-  common::LinkId base_link;
-  common::LinkId tip_link;
+  const common::LinkId base_link(config.at("base_link").as<std::string>());
+  const common::LinkId tip_link(config.at("tip_link").as<std::string>());
   double max_time = MAX_TIME;
   double epsilon = EPSILON;
   TRAC_IK::SolveType solve_type = SOLVE_TYPE;
   KDL::Twist bounds = BOUNDS;
 
-  try
+  if (const auto* params = config.find("params"); params != nullptr)
   {
-    if (const YAML::Node& n = config["base_link"])
-      base_link = common::LinkId(n.as<std::string>());
-    else
-      throw std::runtime_error("TracIKInvKinChainFactory, missing 'base_link' entry");
-
-    if (const YAML::Node& n = config["tip_link"])
-      tip_link = common::LinkId(n.as<std::string>());
-    else
-      throw std::runtime_error("TracIKInvKinChainFactory, missing 'tip_link' entry");
-
-    if (const YAML::Node& params = config["params"])
+    if (const auto* value = params->find("max_time"); value != nullptr && !value->isNull())
+      max_time = value->as<double>();
+    if (const auto* value = params->find("epsilon"); value != nullptr && !value->isNull())
+      epsilon = value->as<double>();
+    if (const auto* value = params->find("solve_type"); value != nullptr && !value->isNull())
+      solve_type = solveTypeNamed(value->as<std::string>());
+    if (const auto* value = params->find("bounds"); value != nullptr && !value->isNull())
     {
-      if (const YAML::Node& n = params["max_time"])
-      {
-        max_time = n.as<double>();
-      }
-      if (const YAML::Node& n = params["epsilon"])
-      {
-        epsilon = n.as<double>();
-      }
-      if (const YAML::Node& n = params["solve_type"])
-      {
-        const auto type = n.as<std::string>();
-        const auto* match = solveTypeNamed(type);
-        if (match == nullptr)
-          throw std::runtime_error("TracIKInvKinChainFactory, 'params' entry 'solve_type' invalid");
-        solve_type = *match;
-      }
-      if (const YAML::Node& n = params["bounds"])
-      {
-        const auto v = n.as<std::vector<double>>();
-        if (v.size() != 6)
-          throw std::runtime_error("TracIKInvKinChainFactory, 'params' entry 'bounds' must have 6 elements");
-        bounds = KDL::Twist(KDL::Vector(v[0], v[1], v[2]), KDL::Vector(v[3], v[4], v[5]));
-      }
+      const auto v = value->as<std::array<double, 6>>();
+      bounds = KDL::Twist(KDL::Vector(v[0], v[1], v[2]), KDL::Vector(v[3], v[4], v[5]));
     }
+  }
 
-    return std::make_unique<TracIKInvKinChain>(
-        scene_graph, base_link, tip_link, solver_name, max_time, epsilon, solve_type, bounds);
-  }
-  catch (const std::exception& e)
-  {
-    CONSOLE_BRIDGE_logError("TracIKInvKinChainFactory: Failed to parse yaml config data! Details: %s", e.what());
-    return nullptr;
-  }
+  return std::make_unique<TracIKInvKinChain>(
+      scene_graph, base_link, tip_link, solver_name, max_time, epsilon, solve_type, bounds);
 }
 
 PLUGIN_ANCHOR_IMPL(TracIKFactoryAnchor)
