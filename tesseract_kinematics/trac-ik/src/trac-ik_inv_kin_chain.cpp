@@ -83,6 +83,14 @@ TracIKInvKinChain::TracIKInvKinChain(const tesseract::scene_graph::SceneGraph& s
 
 InverseKinematics::UPtr TracIKInvKinChain::clone() const { return std::make_unique<TracIKInvKinChain>(*this); }
 
+double TracIKInvKinChain::getMaxTime() const { return max_time_; }
+
+double TracIKInvKinChain::getEpsilon() const { return epsilon_; }
+
+TRAC_IK::SolveType TracIKInvKinChain::getSolveType() const { return solve_type_; }
+
+const KDL::Twist& TracIKInvKinChain::getBounds() const { return bounds_; }
+
 TracIKInvKinChain::TracIKInvKinChain(const TracIKInvKinChain& other) { *this = other; }
 
 TracIKInvKinChain& TracIKInvKinChain::operator=(const TracIKInvKinChain& other)
