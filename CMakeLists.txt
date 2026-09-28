@@ -12,7 +12,6 @@ endif()
 # All of these are used by all components so to avoid having them in each they are include here
 find_package(Eigen3 REQUIRED)
 find_package(boost_plugin_loader REQUIRED)
-find_package(console_bridge REQUIRED)
 find_package(tesseract REQUIRED COMPONENTS common scene_graph)
 
 # Load variable for clang tidy args, compiler options and cxx version

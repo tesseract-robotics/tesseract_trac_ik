@@ -27,7 +27,6 @@ macro(add_trac_ik_gtest test_name test_file)
             tesseract::state_solver
             tesseract::urdf
             tesseract::common
-            console_bridge::console_bridge
             Eigen3::Eigen)
   target_compile_options(${test_name} PRIVATE ${TESSERACT_COMPILE_OPTIONS_PRIVATE} ${TESSERACT_COMPILE_OPTIONS_PUBLIC})
   target_compile_definitions(${test_name} PRIVATE ${TESSERACT_COMPILE_DEFINITIONS_PUBLIC})
