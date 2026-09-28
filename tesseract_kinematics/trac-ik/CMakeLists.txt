@@ -76,14 +76,17 @@ configure_component(
   COMPONENT trac-ik
   NAMESPACE tesseract
   TARGETS ${PROJECT_NAME}_trac-ik ${PROJECT_NAME}_trac-ik_factory
-  DEPENDENCIES "trac_ik_lib 2.2.0" "tesseract_kinematics COMPONENTS core")
+  DEPENDENCIES
+    Eigen3
+    "trac_ik_lib 2.2.0"
+    "tesseract COMPONENTS common scene_graph kinematics kinematics_kdl"
+    boost_plugin_loader)
 
 if(TESSERACT_PACKAGE)
   cpack_component(
     COMPONENT trac-ik
     VERSION ${pkg_extracted_version}
     DESCRIPTION "Tesseract Kinematics Trac-IK implementation"
-    COMPONENT_DEPENDS core
     LINUX_DEPENDS "trac_ik_lib"
     WINDOWS_DEPENDS "trac_ik_lib")
 endif()
