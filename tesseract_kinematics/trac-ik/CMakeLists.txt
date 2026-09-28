@@ -25,8 +25,7 @@ target_link_libraries(
          Eigen3::Eigen
          tesseract::common
          tesseract::scene_graph
-         trac_ik_lib::trac_ik
-         console_bridge::console_bridge)
+         trac_ik_lib::trac_ik)
 target_compile_options(${PROJECT_NAME}_trac-ik PRIVATE ${TESSERACT_COMPILE_OPTIONS_PRIVATE})
 target_compile_options(${PROJECT_NAME}_trac-ik PUBLIC ${TESSERACT_COMPILE_OPTIONS_PUBLIC})
 target_compile_definitions(${PROJECT_NAME}_trac-ik PRIVATE ${TESSERACT_COMPILE_DEFINITIONS_PRIVATE})
@@ -44,12 +43,8 @@ target_include_directories(${PROJECT_NAME}_trac-ik PUBLIC "$<BUILD_INTERFACE:${C
 
 # Add trac-ik kinematics factory
 add_library(${PROJECT_NAME}_trac-ik_factory src/trac-ik_factory.cpp)
-target_link_libraries(
-  ${PROJECT_NAME}_trac-ik_factory
-  PUBLIC ${PROJECT_NAME}_trac-ik
-         tesseract::scene_graph
-         tesseract::common
-         console_bridge::console_bridge)
+target_link_libraries(${PROJECT_NAME}_trac-ik_factory PUBLIC ${PROJECT_NAME}_trac-ik tesseract::scene_graph
+                                                             tesseract::common)
 target_compile_options(${PROJECT_NAME}_trac-ik_factory PRIVATE ${TESSERACT_COMPILE_OPTIONS_PRIVATE})
 target_compile_options(${PROJECT_NAME}_trac-ik_factory PUBLIC ${TESSERACT_COMPILE_OPTIONS_PUBLIC})
 target_compile_definitions(${PROJECT_NAME}_trac-ik_factory PRIVATE ${TESSERACT_COMPILE_DEFINITIONS_PRIVATE})

@@ -25,6 +25,7 @@
  */
 #include <tesseract/common/macros.h>
 TESSERACT_COMMON_IGNORE_WARNINGS_PUSH
+#include <tesseract/common/logging.h>
 #include <memory>
 TESSERACT_COMMON_IGNORE_WARNINGS_POP
 
@@ -130,11 +131,11 @@ void TracIKInvKinChain::calcInvKinHelper(IKSolutions& solutions,
   {
     if (status == -3)
     {
-      CONSOLE_BRIDGE_logDebug("Trac-IK did not find any solutions");
+      TESSERACT_LOG_DEBUG("Trac-IK did not find any solutions");
     }
     else
     {
-      CONSOLE_BRIDGE_logDebug("Trac-IK failed to calculate IK");
+      TESSERACT_LOG_DEBUG("Trac-IK failed to calculate IK");
     }
     return;
   }

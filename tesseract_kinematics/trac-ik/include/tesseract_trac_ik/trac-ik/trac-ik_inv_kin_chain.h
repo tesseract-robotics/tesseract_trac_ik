@@ -27,7 +27,6 @@
 #define TESSERACT_KINEMATICS_TRACIK_INV_KIN_CHAIN_H
 #include <tesseract/common/macros.h>
 TESSERACT_COMMON_IGNORE_WARNINGS_PUSH
-#include <console_bridge/console.h>
 #include <mutex>
 #include <trac_ik/trac_ik.hpp>
 TESSERACT_COMMON_IGNORE_WARNINGS_POP
